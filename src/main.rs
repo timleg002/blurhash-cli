@@ -1,5 +1,3 @@
-#![feature(if_let_guard)]
-
 mod encode;
 mod decode;
 
@@ -199,8 +197,8 @@ fn main() {
                         }
                     };
                 },
-                None if let Some(blurhash) = string => {
-                    let image = decode::blurhash_to_image_data(&blurhash, *width, *height, *punch);
+                None if string.is_some() => {
+                    let image = decode::blurhash_to_image_data(string.as_ref().unwrap(), *width, *height, *punch);
 
                     match output_file {
                         Some(file) => {
