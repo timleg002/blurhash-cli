@@ -1,8 +1,8 @@
 [package]
 name = "blurhash-cli"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
-url = "https://github.com/timleg002/blurhash-cli"
+repository = "https://github.com/timleg002/blurhash-cli"
 description = "A CLI for encoding & decoding images using the blurhash algorithm"
 keywords = ["blurhash", "image", "cli"]
 license = "Apache-2.0/MIT"

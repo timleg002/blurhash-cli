@@ -63,7 +63,7 @@ checksum = "8671e4c8bf59f8784aa27fe4c8e152f2a45dfeb91a52d114e5d104a451494bb4"
 
 [[package]]
 name = "blurhash-cli"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "anyhow",
  "base64",
