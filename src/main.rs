@@ -1,3 +1,5 @@
+#![feature(if_let_guard)]
+
 mod encode;
 mod decode;
 
@@ -33,7 +35,7 @@ enum Commands {
         #[clap(short, long)]
         output_file: Option<String>,
 
-        /// Width of the image (if you don't want to encode the entire image),
+        /// Width of the image
         #[clap(short = 'W', long)]
         width: Option<u32>,
 
@@ -54,7 +56,11 @@ enum Commands {
         #[clap(short, long)]
         input_file: Option<String>,
 
-        /// Whether to take intput from stdin
+        /// Accepts input as a string argument.
+        #[clap(short, long)]
+        string: Option<String>,
+
+        /// Whether to take intput from stdin.
         #[clap(short = 'I', long, takes_value = false)]
         stdin: bool,
 
@@ -142,6 +148,7 @@ fn main() {
             width, 
             height, 
             punch,
+            string,
             stdin,
             stdout,
         } => {
@@ -172,15 +179,8 @@ fn main() {
                                     let image = decode::blurhash_to_image_data(&blurhash, *width, *height, *punch);
 
                                     match output_file {
-                                        Some(file) => {
-                                            if let Err(_) = image.save(file) {
-                                                eprintln!("Error while writing to image!");
-                                                exit(-1);
-                                            }
-                                        },
-                                        None if *stdout => {
-                                            decode::write_image_to_stdout(image);
-                                        },
+                                        Some(file) => decode::write_image_to_file(image, file),
+                                        None if *stdout => decode::write_image_to_stdout(image),
                                         None => {
                                             eprintln!("Please select an output!");
                                             exit(-1);
@@ -199,6 +199,23 @@ fn main() {
                         }
                     };
                 },
+                None if let Some(blurhash) = string => {
+                    let image = decode::blurhash_to_image_data(&blurhash, *width, *height, *punch);
+
+                    match output_file {
+                        Some(file) => {
+                            if let Err(_) = image.save(file) {
+                                eprintln!("Error while writing to image!");
+                                exit(-1);
+                            }
+                        },
+                        None if *stdout => decode::write_image_to_stdout(image),
+                        None => {
+                            eprintln!("Please select an output!");
+                            exit(-1);
+                        }
+                    }
+                }
                 None => {
                     eprintln!("Please select an input!");
                     exit(-1);
